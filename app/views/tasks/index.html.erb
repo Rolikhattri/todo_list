@@ -1,0 +1,82 @@
+<%- model_class = Task -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+
+<%= form_tag("/tasks/filter", method: "get") do %>
+  <%= label_tag(:type, "Show:") %>
+
+  <% if @status.nil? %>
+    <%= radio_button_tag(:type, "All", :checked => true)%>
+  <% else %>
+    <%= radio_button_tag(:type, "All")%>
+  <% end %>
+  <%= label_tag(:type_all, "All") %>
+
+  <% if @status == "Active" %>
+    <%= radio_button_tag(:type, "Active", :checked => true)%>
+  <% else %>
+    <%= radio_button_tag(:type, "Active") %>
+  <% end %>
+  <%= label_tag(:type_active, "Active") %>
+
+  <% if @status == "Complete" %>
+    <%= radio_button_tag(:type, "Complete", :checked => true)%>
+  <% else %>
+    <%= radio_button_tag(:type, "Complete") %>
+  <% end %>
+  <%= label_tag(:type_complete, "Complete") %>
+
+  <%= submit_tag("Filter", :class => 'btn btn-default btn-xs') %>
+<% end %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:Sl) %></th>
+      <th><%= model_class.human_attribute_name(:description) %></th>
+      <th><%= model_class.human_attribute_name(:status) %></th>
+      <th><%= model_class.human_attribute_name(:added_on) %></th>
+      <th><%= model_class.human_attribute_name(:completed_on) %></th>
+      <th><%= model_class.human_attribute_name(:update) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tasks.each_with_index do |task, index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= link_to task.desc, task_path(task) %></td>
+        <td><%= task.status %></td>
+        <td><%= task.created_at.to_date %></td>
+        <td>
+          <% if task.status.downcase == "complete" %>
+            <%= task.updated_at.to_date %>
+          <% else %>
+            -
+          <% end %>
+        </td>
+        <td>
+          <% if task.status.downcase == "complete" %>
+            <%= link_to 'Active', task_active_path(task), :class => 'btn btn-default btn-xs'  %>
+          <% else %>
+            <%= link_to 'Complete', task_complete_path(task), :class => 'btn btn-default btn-xs'  %>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_task_path(task), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      task_path(task),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_task_path,
+            :class => 'btn btn-primary' %>

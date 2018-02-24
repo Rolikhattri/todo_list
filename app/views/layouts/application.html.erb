@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Todo</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+
+
+<body style="margin-top: 60px;">
+
+<%= nav_bar fixed: :top, brand: "ToDo List" do %>
+  <%= menu_group pull: :right do %>
+      <%if (current_user)%>
+          <%= menu_item "Logout", destroy_user_session_path, :style=>'font-weight: bold;', :method => :delete %>
+      <% end %>
+  <% end %>
+<% end %>
+
+<div class="container">
+  <p class="notice"><%= notice %></p>
+  <p class="alert"><%= alert %></p>
+  <%= yield %>
+</div>
+
+</body>
+</html>
