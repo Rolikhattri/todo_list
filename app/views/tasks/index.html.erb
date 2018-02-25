@@ -3,32 +3,34 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
 
-<%= form_tag("/tasks/filter", method: "get") do %>
-  <%= label_tag(:type, "Show:") %>
+<div class = "row">
+  <%= form_tag("/tasks/filter", method: "get") do %>
+    <%= label_tag(:type, "Show:", :class => 'control-label col-lg-1') %>
 
-  <% if @status.nil? %>
-    <%= radio_button_tag(:type, "All", :checked => true)%>
-  <% else %>
-    <%= radio_button_tag(:type, "All")%>
+    <% if @status.nil? %>
+      <%= radio_button_tag(:type, "All", :checked => true)%>
+    <% else %>
+      <%= radio_button_tag(:type, "All")%>
+    <% end %>
+    <%= label_tag(:type_all, "All", :style => "margin-left: 3px; margin-right: 5px;") %>
+
+    <% if @status == "Active" %>
+      <%= radio_button_tag(:type, "Active", :checked => true)%>
+    <% else %>
+      <%= radio_button_tag(:type, "Active") %>
+    <% end %>
+    <%= label_tag(:type_active, "Active", :style => "margin-left: 3px; margin-right: 5px;") %>
+
+    <% if @status == "Complete" %>
+      <%= radio_button_tag(:type, "Complete", :checked => true)%>
+    <% else %>
+      <%= radio_button_tag(:type, "Complete") %>
+    <% end %>
+    <%= label_tag(:type_complete, "Complete", :style => "margin-left: 3px; margin-right: 5px;") %>
+
+    <%= submit_tag("Filter", :class => 'btn btn-default btn-xs', :style => "margin-left: 15px;" ) %>
   <% end %>
-  <%= label_tag(:type_all, "All") %>
-
-  <% if @status == "Active" %>
-    <%= radio_button_tag(:type, "Active", :checked => true)%>
-  <% else %>
-    <%= radio_button_tag(:type, "Active") %>
-  <% end %>
-  <%= label_tag(:type_active, "Active") %>
-
-  <% if @status == "Complete" %>
-    <%= radio_button_tag(:type, "Complete", :checked => true)%>
-  <% else %>
-    <%= radio_button_tag(:type, "Complete") %>
-  <% end %>
-  <%= label_tag(:type_complete, "Complete") %>
-
-  <%= submit_tag("Filter", :class => 'btn btn-default btn-xs') %>
-<% end %>
+</div>
 
 <table class="table table-striped">
   <thead>
@@ -46,7 +48,7 @@
     <% @tasks.each_with_index do |task, index| %>
       <tr>
         <td><%= index + 1 %></td>
-        <td><%= link_to task.desc, task_path(task) %></td>
+        <td><%= task.desc %></td>
         <td><%= task.status %></td>
         <td><%= task.created_at.to_date %></td>
         <td>
