@@ -5,6 +5,8 @@ class TasksController < ApplicationController
   # GET /tasks.json
   def index
     @tasks = current_user.tasks.sort_by &:status
+    @all_count = current_user.tasks.count
+    @complete_count = current_user.tasks.where(:status => "Complete").count
   end
 
   # GET /tasks/1
@@ -41,6 +43,8 @@ class TasksController < ApplicationController
     @task = Task.find(params[:task_id])
     @task.update(:status => "Complete")
     @tasks = current_user.tasks.sort_by &:status
+    @all_count = current_user.tasks.count
+    @complete_count = current_user.tasks.where(:status => "Complete").count
     respond_to do |format|
       format.html { render :index}
       format.json { head :no_content }
@@ -51,7 +55,8 @@ class TasksController < ApplicationController
     @task = Task.find(params[:task_id])
     @task.update(:status => "Active")
     @tasks = current_user.tasks.sort_by &:status
-   
+    @all_count = current_user.tasks.count
+    @complete_count = current_user.tasks.where(:status => "Complete").count
     respond_to do |format|
       format.html { render :index}
       format.json { head :no_content }
@@ -59,6 +64,8 @@ class TasksController < ApplicationController
   end
 
   def filter
+    @all_count = current_user.tasks.count
+    @complete_count = current_user.tasks.where(:status => "Complete").count
     if(params[:type] == "All")
       @tasks = current_user.tasks.sort_by &:status
     else
